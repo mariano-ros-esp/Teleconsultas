@@ -1,0 +1,136 @@
+package guis;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
+
+import arreglos.ArregloCitas;
+import arreglos.ArregloPacientes;
+import clases.Cita;
+import clases.Paciente;
+
+public class DlgReportes extends JDialog {
+
+    private final JPanel contentPanel = new JPanel();
+    private JComboBox<String> cboReportes;
+    private JTextArea txtReporte;
+
+    private ArregloPacientes ap = new ArregloPacientes();
+    private ArregloCitas ac = new ArregloCitas();
+
+    public DlgReportes() {
+        setTitle("Módulo de Reportes");
+        setBounds(100, 100, 550, 450);
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(null);
+
+        JLabel lblSeleccione = new JLabel("Seleccione el Reporte:");
+        lblSeleccione.setBounds(20, 20, 150, 15);
+        contentPanel.add(lblSeleccione);
+
+        cboReportes = new JComboBox<String>();
+        cboReportes.addItem("1. Pacientes Registrados (Sin Cita)");
+        cboReportes.addItem("2. Pacientes Atendidos (Con Cita)");
+        cboReportes.addItem("3. Listado de Citas por Especialidad");
+        cboReportes.addItem("4. Recaudación Total de Teleconsultas");
+        cboReportes.setBounds(160, 15, 250, 22);
+        contentPanel.add(cboReportes);
+
+        JButton btnProcesar = new JButton("Procesar");
+        btnProcesar.setBounds(420, 15, 100, 25);
+        btnProcesar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                procesarReporte();
+            }
+        });
+        contentPanel.add(btnProcesar);
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(20, 60, 500, 320);
+        contentPanel.add(scrollPane);
+
+        txtReporte = new JTextArea();
+        txtReporte.setEditable(false);
+        scrollPane.setViewportView(txtReporte);
+    }
+
+    private void procesarReporte() {
+        int tipo = cboReportes.getSelectedIndex();
+        txtReporte.setText(""); // Limpiamos la pantalla antes de imprimir el nuevo reporte
+
+        switch (tipo) {
+            case 0:
+                reportePacientesSinCita();
+                break;
+            case 1:
+                reportePacientesAtendidos();
+                break;
+            case 2:
+                reporteCitasEspecialidad();
+                break;
+            case 3:
+                reporteRecaudacion();
+                break;
+        }
+    }
+
+    private void reportePacientesSinCita() {
+        txtReporte.append("=== PACIENTES REGISTRADOS (SIN CITA) ===\n\n");
+        for (int i = 0; i < ap.tamaño(); i++) {
+            Paciente p = ap.obtener(i);
+            if (p.getEstado() == 0) {
+                txtReporte.append("Código: " + p.getCodigo() + " | Nombre: " + p.getNombres() + " " + p.getApellidos() + "\n");
+            }
+        }
+    }
+
+    private void reportePacientesAtendidos() {
+        txtReporte.append("=== PACIENTES ATENDIDOS (CON CITA) ===\n\n");
+        for (int i = 0; i < ap.tamaño(); i++) {
+            Paciente p = ap.obtener(i);
+            if (p.getEstado() == 1) {
+                txtReporte.append("Código: " + p.getCodigo() + " | Nombre: " + p.getNombres() + " " + p.getApellidos() + "\n");
+            }
+        }
+    }
+
+    private void reporteCitasEspecialidad() {
+        txtReporte.append("=== CITAS AGRUPADAS POR ESPECIALIDAD ===\n\n");
+        String[] especialidades = {"Medicina General", "Pediatría", "Cardiología"};
+        
+        for (String esp : especialidades) {
+            txtReporte.append(">> " + esp.toUpperCase() + ":\n");
+            boolean hay = false;
+            for (int i = 0; i < ac.tamaño(); i++) {
+                Cita c = ac.obtener(i);
+                if (c.getEspecialidad().equals(esp)) {
+                    hay = true;
+                    txtReporte.append("   - Cita Nro: " + c.getNumeroCita() + " | Cód. Paciente: " + c.getCodigoPaciente() + " | Fecha: " + c.getFecha() + "\n");
+                }
+            }
+            if (!hay) txtReporte.append("   (Sin citas registradas)\n");
+            txtReporte.append("\n");
+        }
+    }
+
+    private void reporteRecaudacion() {
+        txtReporte.append("=== RECAUDACIÓN TOTAL DE TELECONSULTAS ===\n\n");
+        double total = 0;
+        for (int i = 0; i < ac.tamaño(); i++) {
+            Cita c = ac.obtener(i);
+            txtReporte.append("Cita Nro: " + c.getNumeroCita() + " | Costo: S/ " + c.getCosto() + "\n");
+            total += c.getCosto();
+        }
+        txtReporte.append("--------------------------------------------------\n");
+        txtReporte.append("TOTAL RECAUDADO: S/ " + total + "\n");
+    }

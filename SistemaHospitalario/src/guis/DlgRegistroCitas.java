@@ -1,0 +1,209 @@
+package guis;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+// Importamos las clases y arreglos
+import arreglos.ArregloCitas;
+import arreglos.ArregloPacientes;
+import clases.Cita;
+import clases.Paciente;
+
+public class DlgRegistroCitas extends JDialog {
+
+    private final JPanel contentPanel = new JPanel();
+    private JTextField txtCodigoPaciente;
+    private JTextField txtFecha;
+    private JTextField txtHora;
+    private JTextField txtCosto;
+    private JComboBox<String> cboEspecialidad;
+    private JTextArea txtBoleta;
+
+    // Instanciamos los arreglos para poder leer pacientes y guardar citas
+    private ArregloCitas ac = new ArregloCitas();
+    private ArregloPacientes ap = new ArregloPacientes();
+
+    public DlgRegistroCitas() {
+        setTitle("Registro de Citas y Boletas");
+        setBounds(100, 100, 500, 450);
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(null);
+
+        JLabel lblCodigo = new JLabel("Cód. Paciente:");
+        lblCodigo.setBounds(20, 20, 100, 15);
+        contentPanel.add(lblCodigo);
+
+        txtCodigoPaciente = new JTextField();
+        txtCodigoPaciente.setBounds(130, 15, 100, 20);
+        contentPanel.add(txtCodigoPaciente);
+
+        JLabel lblFecha = new JLabel("Fecha (DD/MM/AA):");
+        lblFecha.setBounds(20, 50, 110, 15);
+        contentPanel.add(lblFecha);
+
+        txtFecha = new JTextField();
+        txtFecha.setBounds(130, 45, 100, 20);
+        contentPanel.add(txtFecha);
+
+        JLabel lblHora = new JLabel("Hora (HH:MM):");
+        lblHora.setBounds(20, 80, 100, 15);
+        contentPanel.add(lblHora);
+
+        txtHora = new JTextField();
+        txtHora.setBounds(130, 75, 100, 20);
+        contentPanel.add(txtHora);
+
+        JLabel lblEspecialidad = new JLabel("Especialidad:");
+        lblEspecialidad.setBounds(20, 110, 100, 15);
+        contentPanel.add(lblEspecialidad);
+
+        cboEspecialidad = new JComboBox<String>();
+        cboEspecialidad.addItem("Medicina General");
+        cboEspecialidad.addItem("Pediatría");
+        cboEspecialidad.addItem("Cardiología");
+        cboEspecialidad.setBounds(130, 105, 140, 22);
+        contentPanel.add(cboEspecialidad);
+
+        JLabel lblCosto = new JLabel("Costo (S/):");
+        lblCosto.setBounds(20, 140, 100, 15);
+        contentPanel.add(lblCosto);
+
+        txtCosto = new JTextField();
+        txtCosto.setBounds(130, 135, 100, 20);
+        contentPanel.add(txtCosto);
+
+        // Botón Registrar
+        JButton btnRegistrar = new JButton("Registrar Cita");
+        btnRegistrar.setBounds(310, 15, 140, 30);
+        btnRegistrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                registrarCita();
+            }
+        });
+        contentPanel.add(btnRegistrar);
+
+        // Botón Boleta
+        JButton btnBoleta = new JButton("Generar Boleta");
+        btnBoleta.setBounds(310, 60, 140, 30);
+        btnBoleta.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                generarBoleta();
+            }
+        });
+        contentPanel.add(btnBoleta);
+
+        // Área de texto donde se dibujará la boleta
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(20, 180, 430, 210);
+        contentPanel.add(scrollPane);
+
+        txtBoleta = new JTextArea();
+        txtBoleta.setEditable(false); // Para que no escriban encima de la boleta
+        scrollPane.setViewportView(txtBoleta);
+    }
+
+    // Lógica para registrar y verificar el paciente
+    private void registrarCita() {
+        try {
+            int codPac = Integer.parseInt(txtCodigoPaciente.getText());
+            
+            // 1. Verificamos si el paciente existe en pacientes.txt
+            Paciente p = null;
+            for (int i = 0; i < ap.tamaño(); i++) {
+                if (ap.obtener(i).getCodigo() == codPac) {
+                    p = ap.obtener(i);
+                    break;
+                }
+            }
+            
+            if (p == null) {
+                JOptionPane.showMessageDialog(this, "El paciente no existe. Verifique el código.");
+                return;
+            }
+
+            // 2. Si existe, creamos la cita
+            int numCita = ac.codigoCorrelativo();
+            String fec = txtFecha.getText();
+            String hor = txtHora.getText();
+            String esp = cboEspecialidad.getSelectedItem().toString();
+            double costo = Double.parseDouble(txtCosto.getText());
+
+            Cita nuevaCita = new Cita(numCita, codPac, fec, hor, esp, costo);
+            ac.adicionar(nuevaCita);
+            
+            // 3. Cambiamos el estado del paciente a 1 (Atendido) y grabamos
+            p.setEstado(1);
+            ap.grabarDatos(); // ¡ESTA ES LA LÍNEA CORREGIDA!
+
+            JOptionPane.showMessageDialog(this, "Cita registrada correctamente. Número asignado: " + numCita);
+            
+            // 4. Limpiamos las cajas
+            txtCodigoPaciente.setText("");
+            txtFecha.setText("");
+            txtHora.setText("");
+            txtCosto.setText("");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error. Ingrese valores válidos (números donde corresponde).");
+        }
+    }
+
+    // Lógica para dibujar el ticket / boleta
+    private void generarBoleta() {
+        try {
+            String input = JOptionPane.showInputDialog(this, "Ingrese el Número de Cita para emitir boleta:");
+            if(input == null) return;
+            
+            int numCita = Integer.parseInt(input);
+            Cita citaEncontrada = null;
+
+            for (int i = 0; i < ac.tamaño(); i++) {
+                if (ac.obtener(i).getNumeroCita() == numCita) {
+                    citaEncontrada = ac.obtener(i);
+                    break;
+                }
+            }
+
+            if (citaEncontrada != null) {
+                // Buscamos el nombre del paciente para que salga en la boleta
+                String nombreCompleto = "Paciente Desconocido";
+                for (int i = 0; i < ap.tamaño(); i++) {
+                    if (ap.obtener(i).getCodigo() == citaEncontrada.getCodigoPaciente()) {
+                        nombreCompleto = ap.obtener(i).getNombres() + " " + ap.obtener(i).getApellidos();
+                        break;
+                    }
+                }
+
+                txtBoleta.setText("");
+                txtBoleta.append("===========================================\n");
+                txtBoleta.append("           BOLETA DE TELECONSULTA\n");
+                txtBoleta.append("===========================================\n");
+                txtBoleta.append("Nro Cita      : " + citaEncontrada.getNumeroCita() + "\n");
+                txtBoleta.append("Paciente      : " + nombreCompleto + "\n");
+                txtBoleta.append("Fecha         : " + citaEncontrada.getFecha() + "\n");
+                txtBoleta.append("Hora          : " + citaEncontrada.getHora() + "\n");
+                txtBoleta.append("Especialidad  : " + citaEncontrada.getEspecialidad() + "\n");
+                txtBoleta.append("-------------------------------------------\n");
+                txtBoleta.append("TOTAL A PAGAR : S/ " + citaEncontrada.getCosto() + "\n");
+                txtBoleta.append("===========================================\n");
+            } else {
+                JOptionPane.showMessageDialog(this, "La cita ingresada no existe.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al generar la boleta.");
+        }
+    }
+}

@@ -1,0 +1,73 @@
+package arreglos;
+
+import java.io.*;
+import java.util.ArrayList;
+import clases.Paciente;
+
+public class ArregloPacientes {
+    private ArrayList<Paciente> lista;
+    private String archivo = "pacientes.txt"; // Aquí se guardarán los datos
+
+    public ArregloPacientes() {
+        lista = new ArrayList<Paciente>();
+        cargarDatos();
+    }
+
+    public void adicionar(Paciente p) {
+        lista.add(p);
+        grabarDatos();
+    }
+
+    public int tamaño() {
+        return lista.size();
+    }
+
+    public Paciente obtener(int i) {
+        return lista.get(i);
+    }
+
+    // Método para autogenerar código correlativo
+    public int codigoCorrelativo() {
+        if (tamaño() == 0)
+            return 202610001;
+        else
+            return obtener(tamaño() - 1).getCodigo() + 1;
+    }
+
+    // Grabar en archivo de texto
+    public void grabarDatos() {
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter(archivo));
+            for (int i = 0; i < tamaño(); i++) {
+                Paciente p = obtener(i);
+                pw.println(p.getCodigo() + ";" + p.getNombres() + ";" + 
+                           p.getApellidos() + ";" + p.getDni() + ";" + 
+                           p.getEdad() + ";" + p.getEstado());
+            }
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error al grabar el archivo: " + e.getMessage());
+        }
+    }
+
+    // Cargar del archivo de texto
+    private void cargarDatos() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(archivo));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] s = linea.split(";");
+                int cod = Integer.parseInt(s[0]);
+                String nom = s[1];
+                String ape = s[2];
+                String dni = s[3];
+                int edad = Integer.parseInt(s[4]);
+                int est = Integer.parseInt(s[5]);
+                lista.add(new Paciente(cod, nom, ape, dni, edad, est));
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("No se encontró el archivo o está vacío, se creará uno nuevo.");
+        }
+    }
+}

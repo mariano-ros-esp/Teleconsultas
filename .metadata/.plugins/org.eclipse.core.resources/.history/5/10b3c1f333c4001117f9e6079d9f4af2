@@ -1,0 +1,83 @@
+package guis;
+
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class MenuPrincipal extends JFrame {
+
+    private JPanel contentPane;
+
+    // Método principal para ejecutar esta ventana
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    MenuPrincipal frame = new MenuPrincipal();
+                    frame.setVisible(true);
+                    frame.setLocationRelativeTo(null); // Centra la ventana en tu pantalla
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    // Constructor de la ventana (Diseño)
+    public MenuPrincipal() {
+        setTitle("Sistema de Teleconsultas - Menú Principal");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 350);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null); // Permite ubicar botones libremente
+
+        // Título de la ventana
+        JLabel lblTitulo = new JLabel("SISTEMA DE TELECONSULTAS");
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
+        lblTitulo.setBounds(10, 21, 414, 30);
+        contentPane.add(lblTitulo);
+
+        // Botón 1: Mantenimiento
+        JButton btnMantenimiento = new JButton("1. Mantenimiento");
+        btnMantenimiento.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Aquí programaremos para que abra la ventana de pacientes
+            	DlgMantenimientoPaciente dlg = new DlgMantenimientoPaciente();
+            	dlg.setVisible(true);
+            }
+        });
+        btnMantenimiento.setBounds(130, 75, 170, 35);
+        contentPane.add(btnMantenimiento);
+
+        // Botón 2: Registro (Citas)
+        JButton btnRegistro = new JButton("2. Registro de Citas");
+        btnRegistro.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                DlgRegistroCitas dlg = new DlgRegistroCitas();
+                dlg.setVisible(true);
+            }
+        });
+        btnRegistro.setBounds(130, 130, 170, 35);
+        contentPane.add(btnRegistro);
+
+        // Botón 3: Consultas
+        JButton btnConsulta = new JButton("3. Consultas");
+        btnConsulta.setBounds(130, 185, 170, 35);
+        contentPane.add(btnConsulta);
+
+        // Botón 4: Reportes
+        JButton btnReporte = new JButton("4. Reportes");
+        btnReporte.setBounds(130, 240, 170, 35);
+        contentPane.add(btnReporte);
+    }
+}
