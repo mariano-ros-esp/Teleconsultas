@@ -81,12 +81,12 @@ public class DlgConsultas extends JDialog {
                 return;
             }
 
-            // Mostrar datos del paciente
             txtResultados.setText("=== DATOS DEL PACIENTE ===\n");
             txtResultados.append("Código    : " + pEncontrado.getCodigo() + "\n");
             txtResultados.append("Nombres   : " + pEncontrado.getNombres() + " " + pEncontrado.getApellidos() + "\n");
             txtResultados.append("DNI       : " + pEncontrado.getDni() + "\n");
             txtResultados.append("Edad      : " + pEncontrado.getEdad() + "\n");
+            txtResultados.append("Teléfono  : " + pEncontrado.getTelefono() + "\n");
             txtResultados.append("Estado    : " + (pEncontrado.getEstado() == 0 ? "Registrado" : "Atendido/Internado") + "\n\n");
 
             // Buscar historial de citas de ese paciente
@@ -98,7 +98,8 @@ public class DlgConsultas extends JDialog {
                     tieneCitas = true;
                     txtResultados.append("- Nro Cita: " + c.getNumeroCita() + 
                                          " | Fecha: " + c.getFecha() + 
-                                         " | Especialidad: " + c.getEspecialidad() + "\n");
+                                         " | Especialidad: " + c.getEspecialidad() + 
+                                         " | Estado: " + c.getEstado() + "\n");
                 }
             }
 

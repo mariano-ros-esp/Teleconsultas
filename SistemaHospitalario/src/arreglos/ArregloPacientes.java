@@ -6,7 +6,7 @@ import clases.Paciente;
 
 public class ArregloPacientes {
     private ArrayList<Paciente> lista;
-    private String archivo = "pacientes.txt"; // Aquí se guardarán los datos
+    private String archivo = "pacientes.txt";
 
     public ArregloPacientes() {
         lista = new ArrayList<Paciente>();
@@ -26,7 +26,27 @@ public class ArregloPacientes {
         return lista.get(i);
     }
 
-    // Método para autogenerar código correlativo
+    public Paciente buscar(int codigo) {
+        for (int i = 0; i < tamaño(); i++) {
+            if (obtener(i).getCodigo() == codigo)
+                return obtener(i);
+        }
+        return null;
+    }
+
+    public Paciente buscarPorDni(String dni) {
+        for (int i = 0; i < tamaño(); i++) {
+            if (obtener(i).getDni().equals(dni))
+                return obtener(i);
+        }
+        return null;
+    }
+
+    public void eliminar(Paciente p) {
+        lista.remove(p);
+        grabarDatos();
+    }
+
     public int codigoCorrelativo() {
         if (tamaño() == 0)
             return 202610001;
@@ -34,7 +54,6 @@ public class ArregloPacientes {
             return obtener(tamaño() - 1).getCodigo() + 1;
     }
 
-    // Grabar en archivo de texto
     public void grabarDatos() {
         try {
             PrintWriter pw = new PrintWriter(new FileWriter(archivo));
@@ -42,7 +61,7 @@ public class ArregloPacientes {
                 Paciente p = obtener(i);
                 pw.println(p.getCodigo() + ";" + p.getNombres() + ";" + 
                            p.getApellidos() + ";" + p.getDni() + ";" + 
-                           p.getEdad() + ";" + p.getEstado());
+                           p.getEdad() + ";" + p.getTelefono() + ";" + p.getEstado());
             }
             pw.close();
         } catch (Exception e) {
@@ -50,7 +69,6 @@ public class ArregloPacientes {
         }
     }
 
-    // Cargar del archivo de texto
     private void cargarDatos() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(archivo));
@@ -62,8 +80,15 @@ public class ArregloPacientes {
                 String ape = s[2];
                 String dni = s[3];
                 int edad = Integer.parseInt(s[4]);
-                int est = Integer.parseInt(s[5]);
-                lista.add(new Paciente(cod, nom, ape, dni, edad, est));
+                String tel = "";
+                int est = 0;
+                if (s.length == 6) {
+                    est = Integer.parseInt(s[5]);
+                } else {
+                    tel = s[5];
+                    est = Integer.parseInt(s[6]);
+                }
+                lista.add(new Paciente(cod, nom, ape, dni, edad, tel, est));
             }
             br.close();
         } catch (Exception e) {

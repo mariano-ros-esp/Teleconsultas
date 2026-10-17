@@ -6,18 +6,19 @@ public class Paciente {
     private String apellidos;
     private String dni;
     private int edad;
-    private int estado; // 0 = Registrado, 1 = Internado/Atendido
+    private String telefono;
+    private int estado;
 
-    public Paciente(int codigo, String nombres, String apellidos, String dni, int edad, int estado) {
+    public Paciente(int codigo, String nombres, String apellidos, String dni, int edad, String telefono, int estado) {
         this.codigo = codigo;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.dni = dni;
         this.edad = edad;
+        this.telefono = telefono;
         this.estado = estado;
     }
 
-    // Getters y Setters
     public int getCodigo() { return codigo; }
     public void setCodigo(int codigo) { this.codigo = codigo; }
 
@@ -32,6 +33,9 @@ public class Paciente {
 
     public int getEdad() { return edad; }
     public void setEdad(int edad) { this.edad = edad; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
     public int getEstado() { return estado; }
     public void setEstado(int estado) { this.estado = estado; }

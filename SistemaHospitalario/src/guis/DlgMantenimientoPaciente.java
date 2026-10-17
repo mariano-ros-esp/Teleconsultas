@@ -1,38 +1,38 @@
 package guis;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-// Importamos las clases que creamos antes
 import arreglos.ArregloPacientes;
 import clases.Paciente;
 
 public class DlgMantenimientoPaciente extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
+    private JTextField txtCodigo;
     private JTextField txtNombres;
     private JTextField txtApellidos;
     private JTextField txtDni;
     private JTextField txtEdad;
+    private JTextField txtTelefono;
     private JTable tblPacientes;
     private DefaultTableModel modelo;
     
-    // Instanciamos el arreglo para manejar los datos
     private ArregloPacientes ap = new ArregloPacientes();
 
-    // Constructor de la ventana
     public DlgMantenimientoPaciente() {
         setTitle("Mantenimiento de Pacientes");
         setBounds(100, 100, 650, 450);
@@ -41,47 +41,63 @@ public class DlgMantenimientoPaciente extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
         
+        JLabel lblCodigo = new JLabel("Código:");
+        lblCodigo.setBounds(20, 20, 70, 15);
+        contentPanel.add(lblCodigo);
+        
+        txtCodigo = new JTextField();
+        txtCodigo.setBounds(100, 15, 150, 20);
+        contentPanel.add(txtCodigo);
+        txtCodigo.setColumns(10);
+
         JLabel lblNombres = new JLabel("Nombres:");
-        lblNombres.setBounds(20, 20, 70, 15);
+        lblNombres.setBounds(20, 50, 70, 15);
         contentPanel.add(lblNombres);
         
         txtNombres = new JTextField();
-        txtNombres.setBounds(100, 15, 150, 20);
+        txtNombres.setBounds(100, 45, 150, 20);
         contentPanel.add(txtNombres);
         txtNombres.setColumns(10);
         
         JLabel lblApellidos = new JLabel("Apellidos:");
-        lblApellidos.setBounds(20, 50, 70, 15);
+        lblApellidos.setBounds(20, 80, 70, 15);
         contentPanel.add(lblApellidos);
         
         txtApellidos = new JTextField();
-        txtApellidos.setBounds(100, 45, 150, 20);
+        txtApellidos.setBounds(100, 75, 150, 20);
         contentPanel.add(txtApellidos);
         txtApellidos.setColumns(10);
         
         JLabel lblDni = new JLabel("DNI:");
-        lblDni.setBounds(280, 20, 40, 15);
+        lblDni.setBounds(280, 20, 60, 15);
         contentPanel.add(lblDni);
         
         txtDni = new JTextField();
-        txtDni.setBounds(330, 15, 100, 20);
+        txtDni.setBounds(340, 15, 100, 20);
         contentPanel.add(txtDni);
         txtDni.setColumns(10);
         
         JLabel lblEdad = new JLabel("Edad:");
-        lblEdad.setBounds(280, 50, 40, 15);
+        lblEdad.setBounds(280, 50, 60, 15);
         contentPanel.add(lblEdad);
         
         txtEdad = new JTextField();
-        txtEdad.setBounds(330, 45, 50, 20);
+        txtEdad.setBounds(340, 45, 50, 20);
         contentPanel.add(txtEdad);
         txtEdad.setColumns(10);
+
+        JLabel lblTelefono = new JLabel("Teléfono:");
+        lblTelefono.setBounds(280, 80, 60, 15);
+        contentPanel.add(lblTelefono);
         
-        // Botones de Acción
+        txtTelefono = new JTextField();
+        txtTelefono.setBounds(340, 75, 100, 20);
+        contentPanel.add(txtTelefono);
+        txtTelefono.setColumns(10);
+        
         JButton btnAdicionar = new JButton("Adicionar");
         btnAdicionar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Aquí va la lógica para agregar un paciente
                 adicionarPaciente();
             }
         });
@@ -115,12 +131,24 @@ public class DlgMantenimientoPaciente extends JDialog {
         btnEliminar.setBounds(480, 105, 120, 25);
         contentPanel.add(btnEliminar);
         
-        // Configuración de la Tabla
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(20, 150, 580, 220);
         contentPanel.add(scrollPane);
         
         tblPacientes = new JTable();
+        tblPacientes.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = tblPacientes.getSelectedRow();
+                if (fila != -1) {
+                    txtCodigo.setText(tblPacientes.getValueAt(fila, 0).toString());
+                    txtNombres.setText(tblPacientes.getValueAt(fila, 1).toString());
+                    txtApellidos.setText(tblPacientes.getValueAt(fila, 2).toString());
+                    txtDni.setText(tblPacientes.getValueAt(fila, 3).toString());
+                    txtEdad.setText(tblPacientes.getValueAt(fila, 4).toString());
+                    txtTelefono.setText(tblPacientes.getValueAt(fila, 5).toString());
+                }
+            }
+        });
         tblPacientes.setFillsViewportHeight(true);
         scrollPane.setViewportView(tblPacientes);
         
@@ -130,126 +158,159 @@ public class DlgMantenimientoPaciente extends JDialog {
         modelo.addColumn("Apellidos");
         modelo.addColumn("DNI");
         modelo.addColumn("Edad");
+        modelo.addColumn("Teléfono");
         modelo.addColumn("Estado");
         tblPacientes.setModel(modelo);
         
-        // Cargamos los datos en la tabla al abrir la ventana
+        txtCodigo.setText(String.valueOf(ap.codigoCorrelativo()));
         listarPacientes();
     }
     
-    // Método para agregar un paciente al ArrayList y actualizar la tabla
     private void adicionarPaciente() {
         try {
-            // Generamos el código automáticamente
-            int cod = ap.codigoCorrelativo();
-            String nom = txtNombres.getText();
-            String ape = txtApellidos.getText();
-            String dni = txtDni.getText();
-            int edad = Integer.parseInt(txtEdad.getText());
-            int est = 0; // 0 = Registrado por defecto
+            String strCod = txtCodigo.getText().trim();
+            String nom = txtNombres.getText().trim();
+            String ape = txtApellidos.getText().trim();
+            String dni = txtDni.getText().trim();
+            String strEdad = txtEdad.getText().trim();
+            String tel = txtTelefono.getText().trim();
+
+            if (strCod.isEmpty() || nom.isEmpty() || ape.isEmpty() || dni.isEmpty() || strEdad.isEmpty() || tel.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Complete los campos obligatorios");
+                return;
+            }
+
+            int cod = Integer.parseInt(strCod);
+            int edad = Integer.parseInt(strEdad);
+            int est = 0;
+
+            if (ap.buscar(cod) != null || ap.buscarPorDni(dni) != null) {
+                JOptionPane.showMessageDialog(this, "El paciente ya está registrado");
+                return;
+            }
             
-            // Creamos el objeto paciente
-            Paciente p = new Paciente(cod, nom, ape, dni, edad, est);
-            
-            // Lo añadimos al arreglo (esto también lo guarda en el .txt)
+            Paciente p = new Paciente(cod, nom, ape, dni, edad, tel, est);
             ap.adicionar(p);
             
-            // Limpiamos las cajas y actualizamos la tabla
+            JOptionPane.showMessageDialog(this, "Paciente registrado correctamente");
             limpiarCajas();
             listarPacientes();
             
         } catch (Exception ex) {
-            System.out.println("Error al ingresar los datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al ingresar los datos. Verifique que Código y Edad sean numéricos.");
         }
     }
     
-    // Método para mostrar los datos del ArrayList en la tabla visual
     private void listarPacientes() {
-        modelo.setRowCount(0); // Limpiar la tabla antes de cargar
+        modelo.setRowCount(0);
         for (int i = 0; i < ap.tamaño(); i++) {
             Paciente p = ap.obtener(i);
             Object[] fila = { p.getCodigo(), p.getNombres(), p.getApellidos(), 
-                              p.getDni(), p.getEdad(), (p.getEstado() == 0 ? "Registrado" : "Atendido") };
+                              p.getDni(), p.getEdad(), p.getTelefono(), 
+                              (p.getEstado() == 0 ? "Registrado" : "Atendido") };
             modelo.addRow(fila);
         }
     }
     
-    // Método para limpiar las cajas de texto
     private void limpiarCajas() {
+        txtCodigo.setText(String.valueOf(ap.codigoCorrelativo()));
         txtNombres.setText("");
         txtApellidos.setText("");
         txtDni.setText("");
         txtEdad.setText("");
+        txtTelefono.setText("");
         txtNombres.requestFocus();
     }
+
     private void consultarPaciente() {
         try {
-            int codigoBuscado = Integer.parseInt(javax.swing.JOptionPane.showInputDialog(this, "Ingrese el Código del Paciente a buscar:"));
-            Paciente p = buscarPorCodigo(codigoBuscado);
+            String input = JOptionPane.showInputDialog(this, "Ingrese el Código del Paciente a buscar:");
+            if (input == null) return;
+
+            int codigoBuscado = Integer.parseInt(input.trim());
+            Paciente p = ap.buscar(codigoBuscado);
             
             if (p != null) {
+                txtCodigo.setText(String.valueOf(p.getCodigo()));
                 txtNombres.setText(p.getNombres());
                 txtApellidos.setText(p.getApellidos());
                 txtDni.setText(p.getDni());
                 txtEdad.setText(String.valueOf(p.getEdad()));
-                javax.swing.JOptionPane.showMessageDialog(this, "Paciente encontrado.");
+                txtTelefono.setText(p.getTelefono());
+                JOptionPane.showMessageDialog(this, "Paciente encontrado.");
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Paciente NO encontrado.");
+                JOptionPane.showMessageDialog(this, "Paciente NO encontrado.");
                 limpiarCajas();
             }
         } catch (Exception e) {
-            System.out.println("Error en consulta: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
         }
-    }
-
-    private Paciente buscarPorCodigo(int codigo) {
-        for (int i = 0; i < ap.tamaño(); i++) {
-            if (ap.obtener(i).getCodigo() == codigo) {
-                return ap.obtener(i);
-            }
-        }
-        return null;
     }
 
     private void modificarPaciente() {
         try {
-            int fila = tblPacientes.getSelectedRow();
-            if (fila == -1) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un paciente de la tabla para modificar.");
+            String strCod = txtCodigo.getText().trim();
+            String nom = txtNombres.getText().trim();
+            String ape = txtApellidos.getText().trim();
+            String dni = txtDni.getText().trim();
+            String strEdad = txtEdad.getText().trim();
+            String tel = txtTelefono.getText().trim();
+
+            if (strCod.isEmpty() || nom.isEmpty() || ape.isEmpty() || dni.isEmpty() || strEdad.isEmpty() || tel.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Complete los campos obligatorios");
                 return;
             }
-            
-            int cod = Integer.parseInt(tblPacientes.getValueAt(fila, 0).toString());
-            Paciente p = buscarPorCodigo(cod);
+
+            int cod = Integer.parseInt(strCod);
+            Paciente p = ap.buscar(cod);
             
             if (p != null) {
-                p.setNombres(txtNombres.getText());
-                p.setApellidos(txtApellidos.getText());
-                p.setDni(txtDni.getText());
-                p.setEdad(Integer.parseInt(txtEdad.getText()));
+                p.setNombres(nom);
+                p.setApellidos(ape);
+                p.setDni(dni);
+                p.setEdad(Integer.parseInt(strEdad));
+                p.setTelefono(tel);
                 
                 ap.grabarDatos();
                 
                 listarPacientes();
                 limpiarCajas();
-                javax.swing.JOptionPane.showMessageDialog(this, "Paciente modificado correctamente.");
+                JOptionPane.showMessageDialog(this, "Paciente modificado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Paciente NO encontrado.");
             }
         } catch (Exception e) {
-             javax.swing.JOptionPane.showMessageDialog(this, "Error al modificar. Verifique los datos.");
+            JOptionPane.showMessageDialog(this, "Error al modificar. Verifique los datos.");
         }
     }
 
     private void eliminarPaciente() {
-        int fila = tblPacientes.getSelectedRow();
-        if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un paciente de la tabla para eliminar.");
-            return;
-        }
-        
-        int respuesta = javax.swing.JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este paciente?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
-        if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-            modelo.removeRow(fila);
-            javax.swing.JOptionPane.showMessageDialog(this, "Paciente eliminado de la vista.");
+        try {
+            int cod = Integer.parseInt(txtCodigo.getText().trim());
+            Paciente p = ap.buscar(cod);
+
+            if (p == null) {
+                int fila = tblPacientes.getSelectedRow();
+                if (fila != -1) {
+                    cod = Integer.parseInt(tblPacientes.getValueAt(fila, 0).toString());
+                    p = ap.buscar(cod);
+                }
+            }
+
+            if (p == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione o ingrese un código de paciente válido para eliminar.");
+                return;
+            }
+            
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este paciente?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                ap.eliminar(p);
+                listarPacientes();
+                limpiarCajas();
+                JOptionPane.showMessageDialog(this, "Paciente eliminado correctamente.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Seleccione un paciente de la tabla para eliminar.");
         }
     }
 }
