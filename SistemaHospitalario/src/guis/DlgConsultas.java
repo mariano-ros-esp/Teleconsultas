@@ -13,7 +13,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-// Importamos las clases y arreglos
 import arreglos.ArregloCitas;
 import arreglos.ArregloPacientes;
 import clases.Cita;
@@ -21,7 +20,8 @@ import clases.Paciente;
 
 public class DlgConsultas extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
+    private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
     private JTextField txtCodigoPaciente;
     private JTextArea txtResultados;
 
@@ -67,7 +67,6 @@ public class DlgConsultas extends JDialog {
             int codPac = Integer.parseInt(txtCodigoPaciente.getText());
             Paciente pEncontrado = null;
             
-            // Buscar paciente en el arreglo
             for (int i = 0; i < ap.tamaño(); i++) {
                 if (ap.obtener(i).getCodigo() == codPac) {
                     pEncontrado = ap.obtener(i);
@@ -89,7 +88,6 @@ public class DlgConsultas extends JDialog {
             txtResultados.append("Teléfono  : " + pEncontrado.getTelefono() + "\n");
             txtResultados.append("Estado    : " + (pEncontrado.getEstado() == 0 ? "Registrado" : "Atendido/Internado") + "\n\n");
 
-            // Buscar historial de citas de ese paciente
             txtResultados.append("=== HISTORIAL DE CITAS ===\n");
             boolean tieneCitas = false;
             for (int i = 0; i < ac.tamaño(); i++) {

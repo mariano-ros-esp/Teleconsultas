@@ -19,7 +19,8 @@ import clases.Paciente;
 
 public class DlgReportes extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
+    private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
     private JComboBox<String> cboReportes;
     private JTextArea txtReporte;
 
@@ -66,7 +67,7 @@ public class DlgReportes extends JDialog {
 
     private void procesarReporte() {
         int tipo = cboReportes.getSelectedIndex();
-        txtReporte.setText(""); // Limpiamos la pantalla antes de imprimir el nuevo reporte
+        txtReporte.setText("");
 
         switch (tipo) {
             case 0:

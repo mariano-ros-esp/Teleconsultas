@@ -29,24 +29,52 @@ public class Cita {
         this.estado = estado;
     }
 
-    public int getNumeroCita() { return numeroCita; }
-    public void setNumeroCita(int numeroCita) { this.numeroCita = numeroCita; }
+    public int getNumeroCita() {
+    	return numeroCita; 
+    	}
+    public void setNumeroCita(int numeroCita) {
+    	this.numeroCita = numeroCita; 
+    	}
 
-    public int getCodigoPaciente() { return codigoPaciente; }
-    public void setCodigoPaciente(int codigoPaciente) { this.codigoPaciente = codigoPaciente; }
+    public int getCodigoPaciente() {
+    	return codigoPaciente; 
+    	}
+    public void setCodigoPaciente(int codigoPaciente) {
+    	this.codigoPaciente = codigoPaciente; 
+    	}
 
-    public String getFecha() { return fecha; }
-    public void setFecha(String fecha) { this.fecha = fecha; }
+    public String getFecha() {
+    	return fecha; 
+    	}
+    public void setFecha(String fecha) {
+    	this.fecha = fecha; 
+    	}
 
-    public String getHora() { return hora; }
-    public void setHora(String hora) { this.hora = hora; }
+    public String getHora() {
+    	return hora; 
+    	}
+    public void setHora(String hora) {
+    	this.hora = hora; 
+    	}
 
-    public String getEspecialidad() { return especialidad; }
-    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
+    public String getEspecialidad() {
+    	return especialidad; 
+    	}
+    public void setEspecialidad(String especialidad) {
+    	this.especialidad = especialidad; 
+    	}
 
-    public double getCosto() { return costo; }
-    public void setCosto(double costo) { this.costo = costo; }
+    public double getCosto() {
+    	return costo;
+    	}
+    public void setCosto(double costo) {
+    	this.costo = costo; 
+    	}
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public String getEstado() {
+    	return estado; 
+    	}
+    public void setEstado(String estado) {
+    	this.estado = estado; 
+    	}
 }

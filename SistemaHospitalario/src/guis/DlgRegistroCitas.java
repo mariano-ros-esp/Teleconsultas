@@ -21,7 +21,8 @@ import clases.Paciente;
 
 public class DlgRegistroCitas extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
+    private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
     private JTextField txtCodigoPaciente;
     private JTextField txtFecha;
     private JTextField txtHora;

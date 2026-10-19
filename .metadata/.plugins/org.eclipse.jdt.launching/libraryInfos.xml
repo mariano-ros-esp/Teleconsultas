@@ -12,4 +12,17 @@
             <entry path="null"/>
         </endorsedDirs>
     </libraryInfo>
+    <libraryInfo home="/usr/lib/jvm/java-25-openjdk" version="25.0.4.1"/>
+    <libraryInfo home="/home/infinitive/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_21.0.12.v20260826-1216/jre" version="21.0.12.1"/>
+    <libraryInfo home="/home/infinitive/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_21.0.12.v20260826-1216" version="21.0.12.1">
+        <bootpath>
+            <entry path="null"/>
+        </bootpath>
+        <extensionDirs>
+            <entry path="null"/>
+        </extensionDirs>
+        <endorsedDirs>
+            <entry path="null"/>
+        </endorsedDirs>
+    </libraryInfo>
 </libraryInfos>

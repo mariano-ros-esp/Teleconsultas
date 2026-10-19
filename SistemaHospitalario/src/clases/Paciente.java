@@ -19,24 +19,52 @@ public class Paciente {
         this.estado = estado;
     }
 
-    public int getCodigo() { return codigo; }
-    public void setCodigo(int codigo) { this.codigo = codigo; }
+    public int getCodigo() {
+    	return codigo; 
+    	}
+    public void setCodigo(int codigo) {
+    	this.codigo = codigo; 
+    	}
 
-    public String getNombres() { return nombres; }
-    public void setNombres(String nombres) { this.nombres = nombres; }
+    public String getNombres() {
+    	return nombres; 
+    	}
+    public void setNombres(String nombres) {
+    	this.nombres = nombres; 
+    	}
 
-    public String getApellidos() { return apellidos; }
-    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
+    public String getApellidos() {
+    	return apellidos; 
+    	}
+    public void setApellidos(String apellidos) {
+    	this.apellidos = apellidos; 
+    	}
 
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
+    public String getDni() {
+    	return dni; 
+    	}
+    public void setDni(String dni) {
+    	this.dni = dni; 
+    	}
 
-    public int getEdad() { return edad; }
-    public void setEdad(int edad) { this.edad = edad; }
+    public int getEdad() {
+    	return edad; 
+    	}
+    public void setEdad(int edad) {
+    	this.edad = edad; 
+    	}
 
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public String getTelefono() {
+    	return telefono; 
+    	}
+    public void setTelefono(String telefono) {
+    	this.telefono = telefono;
+    	}
 
-    public int getEstado() { return estado; }
-    public void setEstado(int estado) { this.estado = estado; }
+    public int getEstado() {
+    	return estado; 
+    	}
+    public void setEstado(int estado) {
+    	this.estado = estado; 
+    	}
 }
